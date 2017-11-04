@@ -1,0 +1,67 @@
+#cloud-config
+# vim: syntax=yaml
+#
+
+# The current version of cloud-init in the Hypriot rpi-64 is 0.7.9
+# When dealing with cloud-init, it is SUPER important to know the version
+# I have wasted many hours creating servers to find out the module I was trying to use wasn't in the cloud-init version I had
+# Documentation: http://cloudinit.readthedocs.io/en/0.7.9/index.html
+
+# Set your hostname here, the manage_etc_hosts will update the hosts file entries as well
+hostname: YOUR_HOSTNAME
+manage_etc_hosts: true
+
+# This expands the root volume to the entire SD Card, similar to what the raspbian images did on first boot.
+# This doesn't seem to be required, its more here for posterity in understanding what is going on
+resize_rootfs: true
+growpart:
+    mode: auto
+    devices: ["/"]
+    ignore_growroot_disabled: false
+
+# You could modify this for your own user information
+users:
+  - name: pirate
+    gecos: "Hypriot Pirate"
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    groups: users,docker,video
+    ssh_authorized_keys:
+      - YOUR_PUBLIC_SSH_KEY_HERE
+    lock_passwd: true
+    ssh_pwauth: false
+    chpasswd: { expire: false }
+
+#Setup kubernetes repositories
+apt:
+  sources:
+      kubernetes:
+          keyid: "A7317B0F"
+          source: "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+
+# Update our packages on first boot, saves us some time
+package_update: true
+package_upgrade: true
+package_reboot_if_required: true
+
+# Install any additional packages you need here
+packages:
+  - ntp
+  - iptables-persistent
+  - apt-transport-https
+  - kubeadm
+  - kubelet
+  - kubectl
+  - kubernetes-cni
+
+# Set the locale of the system
+locale: "en_US.UTF-8"
+
+# Set the timezone
+# Value of 'timezone' must exist in /usr/share/zoneinfo
+timezone: "America/Los_Angeles"
+
+# These commands will be ran once on first boot only
+runcmd:
+  # Pickup the hostname changes
+  - [ systemctl, restart, avahi-daemon ]
