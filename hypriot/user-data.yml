@@ -47,7 +47,6 @@ package_reboot_if_required: true
 # Install any additional packages you need here
 packages:
   - ntp
-  - iptables-persistent
   - apt-transport-https
   - kubeadm
   - kubelet
