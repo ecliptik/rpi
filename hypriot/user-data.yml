@@ -36,7 +36,7 @@ users:
 apt:
   sources:
       kubernetes:
-          keyid: "A7317B0F"
+          keyid: "54A647F9048D5688D7DA2ABE6A030B21BA07F4FB"
           source: "deb http://apt.kubernetes.io/ kubernetes-xenial main"
 
 # Update our packages on first boot, saves us some time
