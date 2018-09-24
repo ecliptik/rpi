@@ -27,7 +27,7 @@ def rainbow():
     hue = 0
     count = 0
 
-    while count < 300:
+    while count < 200:
         hue = int(time.time() * 100) % 360
         for x in range(8):
             offset = x * spacing
@@ -39,22 +39,23 @@ def rainbow():
         count = count + 1
 
 def display_color(name):
-    print ("Miniforce Transform!")
+    blinkt.clear()
+
     #Rainbow if name is penny
     if name in ['penny', 'Penny', 'PENNY']:
+        print ("Hello Penny!")
         rainbow()
     #Otherwise perform name lookup
     elif name in list(characters.keys()):
+        print ("Miniforce Transform!")
         #Set color
         r, g, b = [int(x) for x in characters.get(name)]
-        blinkt.clear()
         for i in range(8):
             blinkt.set_pixel(i, r, g, b)
             blinkt.show()
     #Clear and quit
     else:
         print("Thank you for using Miniforce color lookup!")
-        blinkt.clear()
         exit(0)
 
 #Miniforce logo in base64
